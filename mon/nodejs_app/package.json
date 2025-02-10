@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ms2206/data_integration_and_interaction_networks#readme",
   "dependencies": {
+    "body-parser": "^1.20.3",
     "express": "^4.21.2"
   }
 }
