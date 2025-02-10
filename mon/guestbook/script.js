@@ -23,6 +23,19 @@ function sendMessage(){
         displayMessages();
 }
 
+function updateMessages() {
+    const http_req = new XMLHttpRequest();
+    const url = 'http://localhost:3000/messages';
+    http_req.open('GET', url);
+    http_req.onload = function() {
+        const messages = JSON.parse(http_req.responseText);
+        console.log(messages);
+        displayMessages(messages);
+        
+    }
+    http_req.send();
+}
+
 
 function displayMessages() {
     const container = document.getElementById('message-container');
