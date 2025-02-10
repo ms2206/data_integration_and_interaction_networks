@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ms2206/data_integration_and_interaction_networks/issues"
   },
-  "homepage": "https://github.com/ms2206/data_integration_and_interaction_networks#readme"
+  "homepage": "https://github.com/ms2206/data_integration_and_interaction_networks#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
 }
