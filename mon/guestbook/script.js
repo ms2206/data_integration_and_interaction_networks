@@ -4,27 +4,24 @@ function sendMessage(){
     const user_name = input_elem.value;
     const input_message_elem = document.getElementById('message-input');     
     const input_message = input_message_elem.value;
-    messages.push({
-        author: user_name,
-        messages: input_message
-    });
-    displayMessages();
+
     const elem = document.getElementById('greeting-area');
+
+
+    const message = { author: user_name, messages:  input_message };
+    const http_req = new XMLHttpRequest();
+    const url = 'http://localhost:3000/sendmessage';
+    http_req.open('POST', url);
+    const content_type = 'application/json;charset=UTF-8';
+    http_req.setRequestHeader('Content-Type', content_type);
+    http_req.send(JSON.stringify(message));
+
+    http_req.onload = function() {
+        // Update message display once a response is received
+        updateMessages();
+
+        displayMessages();
 }
-
-
-const messages = [
-    {
-        author: 'Matthew',
-        messages: 'Hello'
-    },
-    {
-        author: 'Jo',
-        messages: 'Hi'
-    }
-];
-
-
 
 
 function displayMessages() {

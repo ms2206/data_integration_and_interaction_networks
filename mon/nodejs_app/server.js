@@ -32,3 +32,13 @@ app.get('/messages', function(req, res) {
 app.listen(PORT, function() {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+// Add post request to server
+app.post('/sendmessage', function(req, res) {
+    messages.push(req.body);
+    res.send(req.body); // echo the request
+});
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
