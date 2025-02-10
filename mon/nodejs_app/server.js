@@ -9,3 +9,13 @@ app.listen(PORT, function() {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+const messages = [
+    {
+        author: 'Matthew',
+        messages: 'Hello'
+    },
+    {
+        author: 'Jo',
+        messages: 'Hi'
+    }
+];
