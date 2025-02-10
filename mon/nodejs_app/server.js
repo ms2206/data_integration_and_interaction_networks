@@ -1,8 +1,8 @@
 const express = require('express');
-const app - express();
+const app = express();
 
 const PORT = 3000;
-const pasth_to_project = '/Users/mspriggs/Library/CloudStorage/OneDrive-Illumina,Inc./Documents/Applied_Bioinformatics/modules/data_integration_and_interaction_networks/mon/nodejs_app';
+const path_to_project = '/Users/mspriggs/Library/CloudStorage/OneDrive-Illumina,Inc./Documents/Applied_Bioinformatics/modules/data_integration_and_interaction_networks/mon/nodejs_app/index.html';
 app.use(express.static(path_to_project));
 
 app.listen(PORT, function() {
