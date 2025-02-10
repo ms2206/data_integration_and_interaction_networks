@@ -38,3 +38,6 @@ function displayMessages() {
     }
 }
 displayMessages();
+
+
+// this is on refactor
