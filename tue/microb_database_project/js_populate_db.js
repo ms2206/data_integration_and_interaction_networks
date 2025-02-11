@@ -13,7 +13,7 @@ const rows = load(input_csv);
 
 // create sets
 const uniqueOrganismsFungusType = new Map();
-const uniqueExperimentsOrganismMediaTemperature = new Map();
+const uniqueExperimentsOrganismMediaTemperature = {};
 
 // safe mode
 const safe_mode = true;
@@ -26,7 +26,15 @@ rows.forEach(row => {
     uniqueOrganismsFungusType.set(row['Organism'], row['Is Fungus']);
 
     // add unique experiment, organism, media, temperate to map
-    uniqueExperimentsOrganismMediaTemperature.set(row['Experiment'], row['Organism'], row['Medium'], row['Temperature']);
+    // uniqueExperimentsOrganismMediaTemperature.set(row['Experiment'], row['Organism'], row['Medium'], row['Temperature']);
+
+    uniqueExperimentsOrganismMediaTemperature[row['Experiment']] = {
+        organism: row['Organism'],
+        media: row['Medium'],
+        temperature: row['Temperature']
+    };
+    
+    console.log(uniqueExperimentsOrganismMediaTemperature);
 } );
 
 // loop over uniqueOrganismsFungusType to update organisms table
