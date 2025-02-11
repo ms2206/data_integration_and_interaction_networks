@@ -12,27 +12,41 @@ const db = better_sqlite3('db.sqlite');
 const rows = load(input_csv);
 
 // create sets
-const uniqueOrganismsFungusType = new Map();
-const uniqueExperiments = new Set();
+const uniqueOrganismsFungusType = {};
+const uniqueExperimentsOrganismMediaTemperature = {};
 
+// safe mode
+const safe_mode = true;
 
-
-// loop over each row
+// loop over each row to get unique keys
 rows.forEach(row => {
+    console.log(typeof(row))
 
-    // add unique organism to set
-    uniqueOrganismsFungusType.set(row['Organism'], row['Is Fungus']);
+    // add unique organism to object
+    // uniqueOrganismsFungusType.set(row['Organism'], row['Is Fungus']);
+    uniqueOrganismsFungusType[row['Organism']] = row['Is Fungus'];
+
+
+    // add unique experiment, organism, media, temperate to map
+    // uniqueExperimentsOrganismMediaTemperature.set(row['Experiment'], row['Organism'], row['Medium'], row['Temperature']);
 
 } );
 
+console.log(uniqueOrganismsFungusType);
 // loop over uniqueOrganismsFungusType to update organisms table
 uniqueOrganismsFungusType.forEach((isFungus, organism) => {
-    // console.log(organism, isFungus);
+
     const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
     
-    // console.log(qry);
-    db.prepare(qry).run(organism, isFungus);
+    if (!safe_mode) {
+        db.prepare(qry).run(organism, isFungus);
+    } else {
+        console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
+    }
 });
+
+// loop over uniqueExperimentsOrganismMediaTemperature to update experiments table
+
 
 // close the database connection
 db.close();
