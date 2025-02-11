@@ -12,7 +12,7 @@ const db = better_sqlite3('db.sqlite');
 const rows = load(input_csv);
 
 // create sets
-const uniqueOrganismsFungusType = {};
+const uniqueOrganismsFungusType = new Map();
 const uniqueExperimentsOrganismMediaTemperature = {};
 
 // safe mode
@@ -20,31 +20,31 @@ const safe_mode = true;
 
 // loop over each row to get unique keys
 rows.forEach(row => {
-    console.log(typeof(row))
+    
 
-    // add unique organism to object
-    // uniqueOrganismsFungusType.set(row['Organism'], row['Is Fungus']);
-    uniqueOrganismsFungusType[row['Organism']] = row['Is Fungus'];
+    // add unique organism to map
+    uniqueOrganismsFungusType.set(row['Organism'], row['Is Fungus']);
 
+    // add unique experiment, organism, media, temperate to object
+    uniqueExperimentsOrganismMediaTemperature[row['Experiment']] = {
+        organism: row['Organism'],
+        media: row['Medium'],
+        temperature: row['Temperature']
+    };
 
-    // add unique experiment, organism, media, temperate to map
-    // uniqueExperimentsOrganismMediaTemperature.set(row['Experiment'], row['Organism'], row['Medium'], row['Temperature']);
-
+    console.log(uniqueExperimentsOrganismMediaTemperature);
 } );
 
-
 // loop over uniqueOrganismsFungusType to update organisms table
-Object.keys(uniqueOrganismsFungusType).forEach(organism => {
-
-    console.log(organism);
+uniqueOrganismsFungusType.forEach((isFungus, organism) => {
 
     const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
     
-    // if (!safe_mode) {
-    //     db.prepare(qry).run(organism, isFungus);
-    // } else {
-    //     console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
-    // }
+    if (!safe_mode) {
+        db.prepare(qry).run(organism, isFungus);
+    } else {
+        console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
+    }
 });
 
 // loop over uniqueExperimentsOrganismMediaTemperature to update experiments table
@@ -64,6 +64,3 @@ db.close();
     // console.log(log);
 
     // // db.prepare(experiments_qry).run(row['Experiment'], row['Is Organism'], row['Medium'], row['Temperature']);
-
-
-    // OBJECT BRANCH
