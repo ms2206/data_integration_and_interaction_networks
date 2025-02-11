@@ -13,7 +13,7 @@ const rows = load(input_csv);
 
 // create sets
 const uniqueOrganismsFungusType = {};
-const uniqueExperimentsOrganismMediaTemperature = {};
+const uniqueExperimentsOrganismMediumTemperature = {};
 
 // safe mode
 const safe_mode = true;
@@ -22,44 +22,42 @@ const safe_mode = true;
 rows.forEach(row => {
     
 
-    // add unique organism to map
+    // add unique organism to object
     uniqueOrganismsFungusType[row['Organism']] = row['Is Fungus'];
 
-    // add unique experiment, organism, media, temperate to object
-    uniqueExperimentsOrganismMediaTemperature[row['Experiment']] = {
+    // add unique experiment, organism, medium, temperate to object
+    uniqueExperimentsOrganismMediumTemperature[row['Experiment']] = {
         organism: row['Organism'],
-        media: row['Medium'],
+        medium: row['Medium'],
         temperature: row['Temperature']
     };
 } );
 
 
 // loop over uniqueOrganismsFungusType to update organisms table
-// uniqueOrganismsFungusType.forEach((isFungus, organism) => {
+Object.entries(uniqueOrganismsFungusType).forEach(([organism, isFungus]) => {
 
-//     const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
-    
-//     if (!safe_mode) {
-//         db.prepare(qry).run(organism, isFungus);
-//     } else {
-//         console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
-//     }
-// });
+    // create query template
+    const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
 
-// loop over uniqueExperimentsOrganismMediaTemperature to update experiments table
+    // run the query
+    if (!safe_mode) {
+        db.prepare(qry).run(organism, isFungus);
+    } else {
+        console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
+    }
+});
 
+// loop over uniqueExperimentsOrganismMediumTemperature to update experiments table
+Object.entries(uniqueExperimentsOrganismMediumTemperature).forEach(([experiment, {organism, medium, temperature}]) => {
 
-// close the database connection
-db.close();
+    // create query template
+    const qry = 'insert into experiments (experiment_id, organism_id, medium, temperature) values (?, ?, ?, ?)';
 
-
-
-
-    // // create query template
-    // const qry= 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
-
-    // // run the query
-    // log = `db.prepare(qry).run(${row['Organism']}, ${row['Is Fungus']};`
-    // console.log(log);
-
-    // // db.prepare(experiments_qry).run(row['Experiment'], row['Is Organism'], row['Medium'], row['Temperature']);
+    // run the query
+    if (!safe_mode) {
+        db.prepare(qry).run(experiment, organism, medium, temperature);
+    } else {
+        console.log(`Safe mode: Would insert into experiments (experiment_id, organism_id, medium, temperature) values (${experiment}, ${organism}, ${medium}, ${temperature})`);
+    }
+});
