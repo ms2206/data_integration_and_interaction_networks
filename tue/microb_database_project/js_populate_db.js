@@ -27,7 +27,6 @@ rows.forEach(row => {
 
     // add unique experiment, organism, media, temperate to map
     uniqueExperimentsOrganismMediaTemperature.set(row['Experiment'], row['Organism'], row['Medium'], row['Temperature']);
-
 } );
 
 // loop over uniqueOrganismsFungusType to update organisms table
