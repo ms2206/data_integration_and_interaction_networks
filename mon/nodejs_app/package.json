@@ -2,7 +2,7 @@
   "name": "my_first_node_js_app",
   "version": "1.0.0",
   "description": "My first attempt to run a node js application.",
-  "main": "script.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,8 +15,5 @@
   "bugs": {
     "url": "https://github.com/ms2206/data_integration_and_interaction_networks/issues"
   },
-  "homepage": "https://github.com/ms2206/data_integration_and_interaction_networks#readme",
-  "dependencies": {
-    "express": "^4.21.2"
-  }
+  "homepage": "https://github.com/ms2206/data_integration_and_interaction_networks#readme"
 }

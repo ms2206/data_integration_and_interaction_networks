@@ -4,13 +4,23 @@ function sendMessage(){
     const user_name = input_elem.value;
     const input_message_elem = document.getElementById('message-input');     
     const input_message = input_message_elem.value;
-    messages.push({
-        author: user_name,
-        messages: input_message
-    });
-    updateMessages();
+
     const elem = document.getElementById('greeting-area');
 }
+
+
+const messages = [
+    {
+        author: 'Matthew',
+        messages: 'Hello'
+    },
+    {
+        author: 'Jo',
+        messages: 'Hi'
+    }
+];
+
+
 
 
 function displayMessages() {
@@ -24,19 +34,3 @@ function displayMessages() {
     }
 }
 displayMessages();
-
-
-function updateMessages() {
-    const http_req = new XMLHttpRequest();
-    const url = 'http://localhost:3000/messages';
-    http_req.open('GET', url);
-    http_req.onload = function() {
-        const messages = JSON.parse(http_req.responseText);
-        console.log(messages);
-        displayMessages(messages);
-        
-    }
-    http_req.send();
-}
-
-// this is on main
