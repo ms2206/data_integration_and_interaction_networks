@@ -64,3 +64,6 @@ db.close();
     // console.log(log);
 
     // // db.prepare(experiments_qry).run(row['Experiment'], row['Is Organism'], row['Medium'], row['Temperature']);
+
+
+    // OBJECT BRANCH
