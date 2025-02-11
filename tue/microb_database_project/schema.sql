@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS organisms (
 
 -- Create table for experiments
 CREATE TABLE IF NOT EXISTS experiments (
-    experiments_id text PRIMARY KEY,
+    experiment_id text PRIMARY KEY,
     organism_id text check(organism_id IN ('Pseudomonas sp.', 'Lactic acid bacteria', 'Brochothrix thermosphacta', 'Enterobacteriaceae', 'Yeasts-moulds', 'Staphylococcus aureus')),
     medium text check(medium IN ('CFC', 'MRS', 'STAA', 'VRBD', 'YGC', 'TSA', 'BPA')) not null,
     temperature integer not null,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS datapoints (
     time integer not null,
     cfu float not null,
     primary key (experiment_id, time),
-    foreign key (experiment_id) references experiments(experiments_id)
+    foreign key (experiment_id) references experiments(experiment_id)
 );
 
 -- Create table for authors
@@ -37,6 +37,6 @@ CREATE TABLE IF NOT EXISTS experiments_authors (
     experiment_id text not null,
     primary key (author_id, experiment_id),
     foreign key (author_id) references authors(id),
-    foreign key (experiment_id) references experiments(experiments_id)
+    foreign key (experiment_id) references experiments(experiment_id)
 );
 
