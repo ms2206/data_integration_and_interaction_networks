@@ -12,7 +12,7 @@ const db = better_sqlite3('db.sqlite');
 const rows = load(input_csv);
 
 // create sets
-const uniqueOrganismsFungusType = new Map();
+const uniqueOrganismsFungusType = {};
 const uniqueExperimentsOrganismMediaTemperature = {};
 
 // safe mode
@@ -23,7 +23,7 @@ rows.forEach(row => {
     
 
     // add unique organism to map
-    uniqueOrganismsFungusType.set(row['Organism'], row['Is Fungus']);
+    uniqueOrganismsFungusType[row['Organism']] = row['Is Fungus'];
 
     // add unique experiment, organism, media, temperate to object
     uniqueExperimentsOrganismMediaTemperature[row['Experiment']] = {
@@ -31,21 +31,20 @@ rows.forEach(row => {
         media: row['Medium'],
         temperature: row['Temperature']
     };
-
-    console.log(uniqueExperimentsOrganismMediaTemperature);
 } );
 
-// loop over uniqueOrganismsFungusType to update organisms table
-uniqueOrganismsFungusType.forEach((isFungus, organism) => {
 
-    const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
+// loop over uniqueOrganismsFungusType to update organisms table
+// uniqueOrganismsFungusType.forEach((isFungus, organism) => {
+
+//     const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
     
-    if (!safe_mode) {
-        db.prepare(qry).run(organism, isFungus);
-    } else {
-        console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
-    }
-});
+//     if (!safe_mode) {
+//         db.prepare(qry).run(organism, isFungus);
+//     } else {
+//         console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
+//     }
+// });
 
 // loop over uniqueExperimentsOrganismMediaTemperature to update experiments table
 
