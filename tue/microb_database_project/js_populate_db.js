@@ -32,17 +32,19 @@ rows.forEach(row => {
 
 } );
 
-console.log(uniqueOrganismsFungusType);
+
 // loop over uniqueOrganismsFungusType to update organisms table
-uniqueOrganismsFungusType.forEach((isFungus, organism) => {
+Object.keys(uniqueOrganismsFungusType).forEach(organism => {
+
+    console.log(organism);
 
     const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
     
-    if (!safe_mode) {
-        db.prepare(qry).run(organism, isFungus);
-    } else {
-        console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
-    }
+    // if (!safe_mode) {
+    //     db.prepare(qry).run(organism, isFungus);
+    // } else {
+    //     console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
+    // }
 });
 
 // loop over uniqueExperimentsOrganismMediaTemperature to update experiments table
