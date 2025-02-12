@@ -16,7 +16,7 @@ const known_organisms = {};
 const known_experiments = {};
 
 // safe mode
-const safe_mode = false;
+const safe_mode = true;
 
 // loop over each row to get unique keys
 rows.forEach(row => {
