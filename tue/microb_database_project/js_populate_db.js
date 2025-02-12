@@ -58,12 +58,23 @@ known_authors.forEach(author_name => {
         // run the query
         if (!safe_mode) {
             const info = db.prepare(author_qry).run(author_name);
-            known_author_ids[author_name] = info.lastInsertRowid;
+            //known_author_ids[author_name] = info.lastInsertRowid;
 
         } else {
             console.log(`Safe mode: Would insert into authors (name) values (${author_name})`);}
         }
 });
+
+// populate known_author_ids
+// get the author names and ids from database
+const author_name_id_qry = 'select * from authors'
+const author_name_id = db.prepare(author_name_id_qry).all();
+
+// append to known_author_ids
+author_name_id.forEach(author => {
+    known_author_ids[author['name']] = author['id'];
+});
+
 
 // loop over csv file and insert organism into database
 rows.forEach(row => {
@@ -88,31 +99,75 @@ rows.forEach(row => {
 
 });
 
+// loop over csv file and insert experiment into database
+rows.forEach(row => {
+    // check if experiment is already in the database
+    const experiment_check_qry = 'select count(*) as count from experiments where experiment_id = ?';
+    const experiment_check = db.prepare(experiment_check_qry).get(row['Experiment']);
+
+    // if experiment is already in the database, skip
+    if (experiment_check['count'] > 0) {
+    }
+    else {
+        // insert experiment into database
+        // create query template
+        const experiment_qry = 'insert into experiments (experiment_id, organism_id, medium, temperature) values (?, ?, ?, ?)';
+        // run the query
+        if (!safe_mode) {
+            // update experiments table
+            db.prepare(experiment_qry).run(row['Experiment'], row['Organism'], row['Medium'], row['Temperature']);
+            
+            // experiment_id author_id map
+            const authors = row['Authors'].split(',').map((x) => x.trim());
+
+            for (const a of authors) {
+                // update experiment_id_author_id_map with 
+
+                // use a to get autor id from database
+                const author_id_retreive_qry = 'select id from authors where name = ?';
+                const author_id = db.prepare(author_id_retreive_qry).get(a);
+                
+                // make object linking author_id to experiment_id
+                const experiment_id_author_id_map = {author_id: author_id.id, author_name: a, experiment: row['Experiment']};
+                
+                
+                // update experiments_authors table
+                // check if experiment_id
+                const experiment_author_qry = 'insert into experiments_authors (experiment_id, author_id) values (?, ?)';
+                db.prepare(experiment_author_qry).run(experiment_id_author_id_map.experiment, experiment_id_author_id_map.author_id);
 
 
-// Object.entries(known_organisms).forEach(([organism, isFungus]) => {
 
-//     // create query template
-//     const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
+            }
+            // const experiment_id_author_id_map = {[row['Authors']]: known_author_ids[row['Authors']]};
+            // console.log(experiment_id_author_id_map)
 
-//     // run the query
-//     if (!safe_mode) {
-//         db.prepare(qry).run(organism, isFungus);
-//     } else {
-//         console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
+        } else {
+            console.log(`Safe mode: Would insert into experiments (experiment_id, organism_id, medium, temperature) values (${row['Experiment']}, ${row['Organism']}, ${row['Medium']}, ${row['Temperature']})`);
+        }
+    }
+});
+
+// // loop over csv file and insert experiment_id, author_id into authorship into experiments_authors
+// rows.forEach(row => {
+
+//     // check if experiment is already in the database
+//     const experiment_check_qry = 'select count(*) as count from experiments where experiment_id = ?';
+//     const experiment_check = db.prepare(experiment_check_qry).get(row['Experiment']);
+
+//     // if experiment is already in the database, skip
+//     if (experiment_check['count'] > 0) {
+//         console.log(experiment_check['count'])
+//     } 
+//     else {
+//         // map Experiment to author_id
+//         console.log(row.Experiment, row.Authors)
 //     }
-// });
+        
 
-// // loop over uniqueExperimentsOrganismMediumTemperature to update experiments table
-// Object.entries(known_experiments).forEach(([experiment, {organism, medium, temperature}]) => {
+    // get author_id from known_author_ids
 
-//     // create query template
-//     const qry = 'insert into experiments (experiment_id, organism_id, medium, temperature) values (?, ?, ?, ?)';
+    // insert into experiments_authors    
+    
 
-//     // run the query
-//     if (!safe_mode) {
-//         db.prepare(qry).run(experiment, organism, medium, temperature);
-//     } else {
-//         console.log(`Safe mode: Would insert into experiments (experiment_id, organism_id, medium, temperature) values (${experiment}, ${organism}, ${medium}, ${temperature})`);
-//     }
-// });
+
