@@ -1,6 +1,14 @@
 -- force primary key constraint
 PRAGMA foreign_keys = true;
 
+
+-- tear down database
+DROP TABLE IF EXISTS experiments_authors;
+DROP TABLE IF EXISTS authors;
+DROP TABLE IF EXISTS datapoints;
+DROP TABLE IF EXISTS experiments;
+DROP TABLE IF EXISTS organisms;
+
 -- Create table for organisms
 CREATE TABLE IF NOT EXISTS organisms (
     organisms_id text check(organisms_id IN ('Pseudomonas sp.', 'Lactic acid bacteria', 'Brochothrix thermosphacta', 'Enterobacteriaceae', 'Yeasts-moulds', 'Staphylococcus aureus')) primary key,
