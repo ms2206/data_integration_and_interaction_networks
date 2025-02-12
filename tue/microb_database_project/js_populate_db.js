@@ -3,7 +3,7 @@ const better_sqlite3 = require('better-sqlite3');
 const { load } = require('csv-load-sync');
 
 // safe mode
-const safe_mode = true;
+const safe_mode = false;
 
 // input CSV file
 const input_csv = 'microbial_growth_data_2025.csv';
@@ -40,9 +40,27 @@ rows.forEach(row => {
 
 console.log(known_authors);
 
+// loop over file again and insert into database
+rows.forEach(row => {
+
+    // add author to database
+    // create query template
+    const author_qry = 'insert into authors (name) values (?)';
+
+    if (!known_authors.has(row['Authors'].split(',').map((x) => x.trim()))) {
+        // run the query
+        if (!safe_mode) {
+            console.log(`Author ${row['Authors']} does not exist`);
+            //db.prepare(author_qry).run(row['Authors']);
+        } 
+    } else {
+        console.log(`Author ${row['Authors']} already exists`);}
+    });
 
 
-// // loop over uniqueOrganismsFungusType to update organisms table
+
+
+
 // Object.entries(known_organisms).forEach(([organism, isFungus]) => {
 
 //     // create query template
