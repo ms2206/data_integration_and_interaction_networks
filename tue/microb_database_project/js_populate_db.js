@@ -18,6 +18,7 @@ const rows = load(input_csv);
 const known_organisms = new Set();
 const known_experiments = new Set();
 const known_authors = new Set();
+const known_author_ids = {};
 
 
 // loop over each row to get unique keys
@@ -38,26 +39,54 @@ rows.forEach(row => {
         });
 } );
 
-console.log(known_authors);
 
-// loop over file again and insert into database
-rows.forEach(row => {
 
-    // add author to database
-    // create query template
-    const author_qry = 'insert into authors (name) values (?)';
+// loop over known_authors and insert into database
+known_authors.forEach(author_name => {
 
-    if (!known_authors.has(row['Authors'].split(',').map((x) => x.trim()))) {
+    // check if author is already in the database
+    const author_check_qry = 'select count(*) as count from authors where name = ?';
+    const author_check = db.prepare(author_check_qry).get(author_name);
+    // if author is already in the database, skip
+    if (author_check['count'] > 0) {
+    }
+    else {
+        // add author to authors table
+        // create query template
+        const author_qry = 'insert into authors (name) values (?)';
+
         // run the query
         if (!safe_mode) {
-            console.log(`Author ${row['Authors']} does not exist`);
-            //db.prepare(author_qry).run(row['Authors']);
-        } 
-    } else {
-        console.log(`Author ${row['Authors']} already exists`);}
-    });
+            const info = db.prepare(author_qry).run(author_name);
+            known_author_ids[author_name] = info.lastInsertRowid;
 
+        } else {
+            console.log(`Safe mode: Would insert into authors (name) values (${author_name})`);}
+        }
+});
 
+// loop over csv file and insert organism into database
+rows.forEach(row => {
+    // check if organism is already in the database
+    const organisms_check_qry = 'select count(*) as count from organisms where organisms_id = ?';
+    const organisms_check = db.prepare(organisms_check_qry).get(row['Organism']);
+
+    // if author is already in the database, skip
+    if (organisms_check['count'] > 0) {
+    }
+    else {
+        // insert organism into database
+        // create query template
+        const organism_qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
+        // run the query
+        if (!safe_mode) {
+            db.prepare(organism_qry).run(row['Organism'], row['Is Fungus']);
+        } else {
+            console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${row['Organism']}, ${row['IsFungus']})`);
+        }
+    }
+
+});
 
 
 
