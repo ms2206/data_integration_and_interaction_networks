@@ -3,10 +3,10 @@ const better_sqlite3 = require('better-sqlite3');
 const {load} = require('csv-load-sync');
 
 // SQLite3 database filename
-const input_db_file = './data/microdb.sqlite';
+const input_db_file = '../microdb.sqlite';
 
 // SQL schema creation script
-const schema_script_file = './data/micro_db_schema.sql';
+const schema_script_file = '../micro_db_schema.sql';
 
 // Input CSV file
 const input_csv_file = './data/microbial_growth_data.csv';

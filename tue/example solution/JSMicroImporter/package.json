@@ -9,7 +9,7 @@
   "author": "Tom Kurowski <t.j.kurowski@cranfield.ac.uk>",
   "license": "MIT",
   "dependencies": {
-    "better-sqlite3": "^9.4.0",
+    "better-sqlite3": "^9.6.0",
     "csv-load-sync": "^2.3.1"
   }
 }
