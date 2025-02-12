@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'first-practical';
+  greeting = 'Hello, World!';
 }
