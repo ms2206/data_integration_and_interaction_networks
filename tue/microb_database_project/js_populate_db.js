@@ -12,8 +12,8 @@ const db = better_sqlite3('db.sqlite');
 const rows = load(input_csv);
 
 // create sets
-const uniqueOrganismsFungusType = {};
-const uniqueExperimentsOrganismMediumTemperature = {};
+const known_organisms = {};
+const known_experiments = {};
 
 // safe mode
 const safe_mode = false;
@@ -23,10 +23,10 @@ rows.forEach(row => {
     
 
     // add unique organism to object
-    uniqueOrganismsFungusType[row['Organism']] = row['Is Fungus'];
+    known_organisms[row['Organism']] = row['Is Fungus'];
 
     // add unique experiment, organism, medium, temperate to object
-    uniqueExperimentsOrganismMediumTemperature[row['Experiment']] = {
+    known_experiments[row['Experiment']] = {
         organism: row['Organism'],
         medium: row['Medium'],
         temperature: row['Temperature']
@@ -35,7 +35,7 @@ rows.forEach(row => {
 
 
 // loop over uniqueOrganismsFungusType to update organisms table
-Object.entries(uniqueOrganismsFungusType).forEach(([organism, isFungus]) => {
+Object.entries(known_organisms).forEach(([organism, isFungus]) => {
 
     // create query template
     const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
@@ -49,7 +49,7 @@ Object.entries(uniqueOrganismsFungusType).forEach(([organism, isFungus]) => {
 });
 
 // loop over uniqueExperimentsOrganismMediumTemperature to update experiments table
-Object.entries(uniqueExperimentsOrganismMediumTemperature).forEach(([experiment, {organism, medium, temperature}]) => {
+Object.entries(known_experiments).forEach(([experiment, {organism, medium, temperature}]) => {
 
     // create query template
     const qry = 'insert into experiments (experiment_id, organism_id, medium, temperature) values (?, ?, ?, ?)';

@@ -1,0 +1,15 @@
+{
+  "name": "jsmicroimporter",
+  "version": "1.0.0",
+  "description": "Importer for microbial growth data in Data Integration practical.",
+  "main": "import_micro_db.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tom Kurowski <t.j.kurowski@cranfield.ac.uk>",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^9.4.0",
+    "csv-load-sync": "^2.3.1"
+  }
+}
