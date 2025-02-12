@@ -2,6 +2,9 @@
 const better_sqlite3 = require('better-sqlite3');
 const { load } = require('csv-load-sync');
 
+// safe mode
+const safe_mode = true;
+
 // input CSV file
 const input_csv = 'microbial_growth_data_2025.csv';
 
@@ -12,52 +15,57 @@ const db = better_sqlite3('db.sqlite');
 const rows = load(input_csv);
 
 // create sets
-const known_organisms = {};
-const known_experiments = {};
+const known_organisms = new Set();
+const known_experiments = new Set();
+const known_authors = new Set();
 
-// safe mode
-const safe_mode = true;
 
 // loop over each row to get unique keys
 rows.forEach(row => {
     
 
     // add unique organism to object
-    known_organisms[row['Organism']] = row['Is Fungus'];
+    known_organisms.add(row['Organism']);
 
-    // add unique experiment, organism, medium, temperate to object
-    known_experiments[row['Experiment']] = {
-        organism: row['Organism'],
-        medium: row['Medium'],
-        temperature: row['Temperature']
-    };
+    // add unique experiment to object
+    known_experiments.add(row['Experiment']);
+
+    // add unique author to object
+    const author_names = row['Authors'].split(',').map((x) => x.trim());
+
+    author_names.forEach(author_name => {
+            known_authors.add(author_name);
+        });
 } );
 
+console.log(known_authors);
 
-// loop over uniqueOrganismsFungusType to update organisms table
-Object.entries(known_organisms).forEach(([organism, isFungus]) => {
 
-    // create query template
-    const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
 
-    // run the query
-    if (!safe_mode) {
-        db.prepare(qry).run(organism, isFungus);
-    } else {
-        console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
-    }
-});
+// // loop over uniqueOrganismsFungusType to update organisms table
+// Object.entries(known_organisms).forEach(([organism, isFungus]) => {
 
-// loop over uniqueExperimentsOrganismMediumTemperature to update experiments table
-Object.entries(known_experiments).forEach(([experiment, {organism, medium, temperature}]) => {
+//     // create query template
+//     const qry = 'insert into organisms (organisms_id, is_fungus) values (?, ?)';
 
-    // create query template
-    const qry = 'insert into experiments (experiment_id, organism_id, medium, temperature) values (?, ?, ?, ?)';
+//     // run the query
+//     if (!safe_mode) {
+//         db.prepare(qry).run(organism, isFungus);
+//     } else {
+//         console.log(`Safe mode: Would insert into organisms (organisms_id, is_fungus) values (${organism}, ${isFungus})`);
+//     }
+// });
 
-    // run the query
-    if (!safe_mode) {
-        db.prepare(qry).run(experiment, organism, medium, temperature);
-    } else {
-        console.log(`Safe mode: Would insert into experiments (experiment_id, organism_id, medium, temperature) values (${experiment}, ${organism}, ${medium}, ${temperature})`);
-    }
-});
+// // loop over uniqueExperimentsOrganismMediumTemperature to update experiments table
+// Object.entries(known_experiments).forEach(([experiment, {organism, medium, temperature}]) => {
+
+//     // create query template
+//     const qry = 'insert into experiments (experiment_id, organism_id, medium, temperature) values (?, ?, ?, ?)';
+
+//     // run the query
+//     if (!safe_mode) {
+//         db.prepare(qry).run(experiment, organism, medium, temperature);
+//     } else {
+//         console.log(`Safe mode: Would insert into experiments (experiment_id, organism_id, medium, temperature) values (${experiment}, ${organism}, ${medium}, ${temperature})`);
+//     }
+// });
