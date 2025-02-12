@@ -16,7 +16,7 @@ const uniqueOrganismsFungusType = {};
 const uniqueExperimentsOrganismMediumTemperature = {};
 
 // safe mode
-const safe_mode = true;
+const safe_mode = false;
 
 // loop over each row to get unique keys
 rows.forEach(row => {
