@@ -99,7 +99,7 @@ rows.forEach(row => {
 
 });
 
-// loop over csv file and insert experiment into database
+// loop over csv file and insert experiment (and experiment_authors) into database
 rows.forEach(row => {
     // check if experiment is already in the database
     const experiment_check_qry = 'select count(*) as count from experiments where experiment_id = ?';
@@ -148,26 +148,15 @@ rows.forEach(row => {
     }
 });
 
-// // loop over csv file and insert experiment_id, author_id into authorship into experiments_authors
-// rows.forEach(row => {
-
-//     // check if experiment is already in the database
-//     const experiment_check_qry = 'select count(*) as count from experiments where experiment_id = ?';
-//     const experiment_check = db.prepare(experiment_check_qry).get(row['Experiment']);
-
-//     // if experiment is already in the database, skip
-//     if (experiment_check['count'] > 0) {
-//         console.log(experiment_check['count'])
-//     } 
-//     else {
-//         // map Experiment to author_id
-//         console.log(row.Experiment, row.Authors)
-//     }
-        
-
-    // get author_id from known_author_ids
-
-    // insert into experiments_authors    
-    
-
-
+// insert datapoints into database
+rows.forEach(row => {
+    // create query template
+    const data_qry = 'insert into datapoints (experiment_id, time, cfu) values (?, ?, ?)';
+    // run the query
+    if (!safe_mode) {
+        // console.log(row['Experiment'], row['Time'], row['CFU']);
+        db.prepare(data_qry).run(row['Experiment'], row['Time'], row['CFU']);
+    } else {
+        console.log(`Safe mode: Would insert into data (experiment_id, time, cfu) values (${row['Experiment']}, ${row['Time']}, ${row['CFU']})`);
+    }
+});
