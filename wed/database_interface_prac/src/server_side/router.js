@@ -1,7 +1,6 @@
 const express = require('express');
 const sqlite3 = require('sqlite3');
-const db = new sqlite3.Database('../microdb.sqlite');
-
+const db = new sqlite3.Database('/Users/mspriggs/Library/CloudStorage/OneDrive-Illumina,Inc./Documents/Applied_Bioinformatics/modules/data_integration_and_interaction_networks/wed/database_interface_prac/src/microdb.sqlite');
 
 const micobe_router = express.Router();
 
