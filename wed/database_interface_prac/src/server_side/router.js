@@ -45,6 +45,19 @@ micobe_router.get('/experiments/:experiment_id', function(req, res) {
     });
 });
 
+// make endpoint for getting all experiment ids
+micobe_router.get('/experiment-ids', function(req, res) {
+    const query = 'SELECT experiment_id FROM experiments';
+    db.all(query, [], function(err, rows) {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        res.json(rows);
+    });
+});
+
+
 // make endpoint for getting all datapoints
 micobe_router.get('/datapoints', function(req, res) {
     const query = 'SELECT * FROM datapoints';
