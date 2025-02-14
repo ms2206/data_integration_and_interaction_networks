@@ -70,6 +70,19 @@ micobe_router.get('/datapoints', function(req, res) {
     });
 });
 
+// make endpoint for getting all datapoints per experiment
+micobe_router.get('/datapoints/:experiment_id', function(req, res) {
+    const query = 'SELECT * FROM datapoints WHERE experiment_id = ?';
+    db.all(query, [req.params.experiment_id], function(err, rows) {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        res.json(rows);
+    });
+});
+
+
 // make endpoint for organisms
 micobe_router.get('/organisms', function(req, res) {
     const query = 'SELECT * FROM organisms';
