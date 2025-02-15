@@ -98,6 +98,48 @@ micobe_router.get('/organisms', function(req, res) {
 });
 
 
+// endpoint  reporting growth rate for a specific experiment
+micobe_router.get('/fit/growth/:experiment_id', function(req, res) {
+    const query = 'SELECT time, cfu FROM datapoints '
+        + 'WHERE experiment_id = ? '
+        + 'ORDER BY time';
+        
+        const parameters = [req.params.experiment_id];
+
+        db.all(query, parameters, function(err, rows) 
+        {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+            const r_input = {
+                times: [],
+                cfus: []
+            };
+
+            for(let i = 0; i < rows.length; i++) {
+                r_input.times.push(rows[i].time);
+                r_input.cfus.push(rows[i].cfu);
+            };
+
+            rscript('../client_side/fit_model.R').data(r_input)
+            .call(function(err, growth_coef) {
+                if (err) {
+                    console.log(err.toString());
+                    
+                    throw err;
+                }
+
+                const output = {
+                    experiment_id: req.params.experiment_id,
+                    growth_coefficient: growth_coef
+                };
+
+                res.json(output);
+                              
+            });
+        });
+});
 
 
 module.exports = micobe_router;
